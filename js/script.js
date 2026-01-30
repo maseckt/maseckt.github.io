@@ -1,119 +1,152 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+    const dom = {
+        body: document.body,
+        blackScreen: document.querySelector('.black-screen'),
+                          musicIcon: document.querySelector('.music-icon'),
+                          cards: document.querySelectorAll('.card')
+    };
+
+    const audio = new Audio('music/music.opus');
+    audio.loop = true;
+    audio.volume = 0;
+
     const canvas = document.createElement('canvas');
     canvas.className = 'background-canvas';
-    document.body.appendChild(canvas);
+    dom.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
-    const blackScreen = document.querySelector(".black-screen");
-    const musicIcon = document.querySelector(".music-icon");
-    const audio = new Audio("music/Durnojj_Vkus-Plastinki.mp3");
 
-    let particleCount = window.innerWidth < 768 ? 100 : 150;
+    const PARTICLE_COLOR = '#83a598';
+
     let particles = [];
-    let currentColor = '#4B6F91';
-    const cards = document.querySelectorAll('.card');
+    let targetLimit = getParticleLimit();
+    let currentLimit = targetLimit;
 
-    const resizeCanvas = () => {
+    function getParticleLimit() {
+        return window.innerWidth < 768 ? 70 : 120;
+    }
+
+    function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+    }
 
-        particles.forEach(p => {
-            p.x = Math.min(p.x, canvas.width);
-            p.y = Math.min(p.y, canvas.height);
-        });
-    };
+    function createParticle() {
+        return {
+            x: Math.random() * canvas.width,
+                          y: Math.random() * canvas.height,
+                          r: Math.random() * 4 + 1,
+                          vx: (Math.random() - 0.5) * 0.6,
+                          vy: (Math.random() - 0.5) * 0.6,
+                          a: Math.random() * 0.5 + 0.4
+        };
+    }
 
-    const createParticle = () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 5 + 1,
-        speedX: (Math.random() - 0.5) * 2,
-        speedY: (Math.random() - 0.5) * 2,
-        alpha: Math.random() * 0.5 + 0.5,
-    });
+    function updateParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.a -= 0.004;
 
-    const updateParticles = () => {
-        particles.forEach(p => {
-            p.x += p.speedX;
-            p.y += p.speedY;
-            p.alpha -= 0.01;
-            if (p.alpha <= 0) p.alpha = 0;
-        });
-
-        particles = particles.filter(p => p.alpha > 0);
-        while (particles.length < particleCount) particles.push(createParticle());
-    };
-
-    const drawParticles = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            ctx.globalAlpha = p.alpha;
-            const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-            gradient.addColorStop(0, currentColor);
-            gradient.addColorStop(1, 'rgba(75, 110, 145, 0)');
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-    };
-
-    const fadeInMusic = () => {
-        audio.volume = 0;
-        audio.play().catch(error => console.error("Ошибка воспроизведения трека:", error));
-        
-        const fadeInterval = setInterval(() => {
-            if (audio.volume < 0.1) {
-                audio.volume += 0.01;
-            } else {
-                clearInterval(fadeInterval);
+            if (p.a <= 0) {
+                particles.splice(i, 1);
             }
-        }, 50);
-    };
-
-    const showCards = () => {
-        cards.forEach((card, index) => {
-            setTimeout(() => {
-                card.classList.add('visible');
-            }, index * 150);
-        });
-    };
-
-    blackScreen.addEventListener("click", () => {
-        blackScreen.style.opacity = '0';
-        fadeInMusic();
-        showCards();
-        setTimeout(() => {
-            blackScreen.classList.add("hidden");
-        }, 1000);
-        
-        musicIcon.classList.remove("hidden");
-    });
-
-    audio.loop = true;
-    audio.volume = 0.1;
-
-    musicIcon.addEventListener("click", () => {
-        if (audio.paused) {
-            fadeInMusic();
-            musicIcon.classList.add("playing");
-        } else {
-            audio.pause();
-            musicIcon.classList.remove("playing");
         }
-    });
 
-    window.addEventListener('resize', () => {
-        particleCount = window.innerWidth < 768 ? 100 : 150;
-        resizeCanvas();
-    });
-    
-    resizeCanvas();
-    animate();
+        while (particles.length < currentLimit) {
+            particles.push(createParticle());
+        }
+    }
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            ctx.globalAlpha = p.a;
+            const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+            g.addColorStop(0, PARTICLE_COLOR);
+            g.addColorStop(1, 'rgba(131,165,152,0)');
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+    }
 
     function animate() {
         updateParticles();
         drawParticles();
         requestAnimationFrame(animate);
     }
+
+    function fadeInAudio(target = 0.1) {
+        if (!audio.paused) return;
+        audio.volume = 0;
+        audio.play().catch(() => {});
+        targetLimit = getParticleLimit();
+
+        let v = 0;
+        function step() {
+            v += 0.006;
+            audio.volume = Math.min(v, target);
+            currentLimit = Math.min(currentLimit + 2, targetLimit);
+
+            if (audio.volume < target || currentLimit < targetLimit) {
+                requestAnimationFrame(step);
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    function fadeOutAudio() {
+        let v = audio.volume;
+        targetLimit = 3;
+
+        function step() {
+            v -= 0.01;
+            audio.volume = Math.max(v, 0);
+            currentLimit = Math.max(currentLimit - 3, targetLimit);
+
+            if (audio.volume > 0 || currentLimit > targetLimit) {
+                requestAnimationFrame(step);
+            } else {
+                audio.pause();
+                audio.volume = 0;
+            }
+        }
+        requestAnimationFrame(step);
+    }
+    function showCardsWithDelay() {
+        const footer = document.querySelector('.footer');
+        dom.cards.forEach(card => card.style.pointerEvents = 'none');
+        dom.cards.forEach((card, i) => {
+            setTimeout(() => card.classList.add('visible'), i * 100);
+        });
+        if (footer) footer.classList.add('visible');
+        setTimeout(() => {
+            dom.cards.forEach(card => card.style.pointerEvents = 'auto');
+        }, 100);
+    }
+
+    dom.blackScreen.addEventListener('click', () => {
+        dom.blackScreen.style.opacity = '0';
+        fadeInAudio();
+        showCardsWithDelay();
+        setTimeout(() => dom.blackScreen.classList.add('hidden'), 1000);
+        dom.musicIcon.classList.remove('hidden');
+    });
+
+    dom.musicIcon.addEventListener('click', () => {
+        audio.paused ? fadeInAudio() : fadeOutAudio();
+    });
+
+    window.addEventListener('resize', () => {
+        targetLimit = getParticleLimit();
+        resizeCanvas();
+    });
+
+    resizeCanvas();
+    animate();
 });
