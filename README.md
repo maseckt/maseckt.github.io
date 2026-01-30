@@ -1,2 +1,2 @@
-# [maseckt.github.io](https:/maseckt.github.io)
+# [maseckt.github.io](https://maseckt.github.io/)
 сайт
