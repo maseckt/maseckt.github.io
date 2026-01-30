@@ -70,11 +70,7 @@ body{
   gap: 18px;
 }
 .avatar{
-  width: 200px;
-  height: 200px;
   border-radius: 50%;
-  object-fit: cover;
-  flex: 0 0 auto;
 }
 .title{
   font-family: 'GillSans', sans-serif;
