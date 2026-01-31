@@ -9,27 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const audio = new Audio('music/music.opus');
     audio.loop = true;
     audio.volume = 0;
-
     const canvas = document.createElement('canvas');
     canvas.className = 'background-canvas';
     dom.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
-
     const PARTICLE_COLOR = '#83a598';
 
     let particles = [];
     let targetLimit = getParticleLimit();
     let currentLimit = targetLimit;
-
     function getParticleLimit() {
         return window.innerWidth < 768 ? 70 : 120;
     }
-
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
-
     function createParticle() {
         return {
             x: Math.random() * canvas.width,
@@ -40,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
                           a: Math.random() * 0.5 + 0.4
         };
     }
-
     function updateParticles() {
         for (let i = particles.length - 1; i >= 0; i--) {
             const p = particles[i];
@@ -52,15 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 particles.splice(i, 1);
             }
         }
-
         while (particles.length < currentLimit) {
             particles.push(createParticle());
         }
     }
-
     function drawParticles() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         for (let i = 0; i < particles.length; i++) {
             const p = particles[i];
             ctx.globalAlpha = p.a;
@@ -74,13 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         ctx.globalAlpha = 1;
     }
-
     function animate() {
         updateParticles();
         drawParticles();
         requestAnimationFrame(animate);
     }
-
     function fadeInAudio(target = 0.1) {
         if (!audio.paused) return;
         audio.volume = 0;
@@ -99,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         requestAnimationFrame(step);
     }
-
     function fadeOutAudio() {
         let v = audio.volume;
         targetLimit = 3;
@@ -129,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
             dom.cards.forEach(card => card.style.pointerEvents = 'auto');
         }, 100);
     }
-
     dom.blackScreen.addEventListener('click', () => {
         dom.blackScreen.style.opacity = '0';
         fadeInAudio();
@@ -137,16 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => dom.blackScreen.classList.add('hidden'), 1000);
         dom.musicIcon.classList.remove('hidden');
     });
-
     dom.musicIcon.addEventListener('click', () => {
         audio.paused ? fadeInAudio() : fadeOutAudio();
     });
-
     window.addEventListener('resize', () => {
         targetLimit = getParticleLimit();
         resizeCanvas();
     });
-
     resizeCanvas();
     animate();
 });
