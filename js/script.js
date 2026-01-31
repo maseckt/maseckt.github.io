@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function showCards() {
         dom.cards.forEach((card, i) => {
-            setTimeout(() => card.classList.add('visible'), i * 100);
+            setTimeout(() => card.classList.add('visible'), i === 0 ? 0 : i * 100);
         });
     }
     dom.blackScreen.addEventListener('click', () => {

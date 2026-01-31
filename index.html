@@ -30,7 +30,7 @@
             src: url('fonts/ermilov-bold.woff2') format('woff2');
             font-display: swap;
         }
-        body{
+        body {
             margin: 0;
             background-color: var(--bg);
             color: var(--text);
@@ -38,7 +38,9 @@
             justify-content: center;
             align-items: flex-start;
             text-align: center;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
             font-family: 'Ermilov', sans-serif;
         }
         .background-canvas{
@@ -47,12 +49,12 @@
             pointer-events: none;
             z-index: -1;
         }
-        .container{
+        .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 14px;
-            padding-top: 60px;
+            padding: 60px 0 100px 0;
         }
         .card{
             background-color: var(--card);
