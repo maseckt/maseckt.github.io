@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
         body: document.body,
         blackScreen: document.querySelector('.black-screen'),
                           musicIcon: document.querySelector('.music-icon'),
-                          cards: document.querySelectorAll('.card')
+                          cards: document.querySelectorAll('.card'),
+                          footer: document.querySelector('.footer')
     };
-    const footer = document.querySelector('.footer');
     const audio = new Audio();
     audio.loop = true;
     audio.volume = 0;
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
     const PARTICLE_COLOR = '#83a598';
+
     let particles = [];
     let targetLimit = getParticleLimit();
     let currentLimit = targetLimit;
@@ -111,11 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.blackScreen.style.opacity = '0';
         fadeInAudio();
         showCards();
+        dom.musicIcon.classList.remove('hidden');
         setTimeout(() => {
             dom.blackScreen.classList.add('hidden');
-            if (footer) footer.classList.add('visible');
-        }, 50);
-            dom.musicIcon.classList.remove('hidden');
+            dom.blackScreen.style.display = 'none';
+            if (dom.footer) dom.footer.classList.add('visible');
+        });
     });
     dom.musicIcon.addEventListener('click', () => {
         audio.paused ? fadeInAudio() : fadeOutAudio();
