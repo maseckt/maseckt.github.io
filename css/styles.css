@@ -71,6 +71,7 @@ body{
 }
 .avatar{
   border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--card-contrast);
 }
 .title{
   font-family: 'GillSans', sans-serif;
@@ -105,7 +106,6 @@ body{
 .projects-soon:hover{
   background-color: #665c54;
 }
-
 .footer {
   background-color: var(--card);
   height: 50px;
@@ -148,15 +148,12 @@ body{
   color: var(--text);
   transition: transform var(--transition-medium);
 }
-
 .music-icon.hidden{
   display: none;
 }
-
 .music-icon:hover{
   transform: scale(1.15);
 }
-
 .black-screen{
   position: fixed;
   inset: 0;
@@ -170,7 +167,6 @@ body{
   transition: opacity var(--transition-medium), visibility var(--transition-medium);
   user-select: none;
 }
-
 .black-screen.hidden{
   opacity: 0;
   visibility: hidden;
@@ -181,25 +177,20 @@ body{
   .projects{
     width: 90%;
   }
-
   .avatar{
     width: 150px;
     height: 150px;
   }
-
   .description{
     font-size: 18px;
   }
-
   .projects-title{
     font-size: 36px;
   }
-
   .projects-soon{
     font-size: 32px;
     width: 100%;
   }
-
   .footer{
     font-size: 14px;
   }
