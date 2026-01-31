@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let particles = [];
     let targetLimit = getParticleLimit();
     let currentLimit = targetLimit;
-
     function getParticleLimit() {
         return window.innerWidth < 768 ? 70 : 120;
     }
@@ -76,17 +75,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function fadeInAudio(target = 0.1) {
         ensureAudioLoaded();
-        if (!audio.paused) return;
-        audio.play().catch(() => {});
-        targetLimit = getParticleLimit();
-        let v = audio.volume;
-        function step() {
-            v += 0.006;
-            audio.volume = Math.min(v, target);
-            currentLimit = Math.min(currentLimit + 2, targetLimit);
-            if (audio.volume < target || currentLimit < targetLimit) requestAnimationFrame(step);
+        const startFade = () => {
+            if (!audio.paused) return;
+            audio.play().catch(() => {});
+            targetLimit = getParticleLimit();
+            let v = 0;
+            audio.volume = v;
+
+            function step() {
+                v += 0.003;
+                audio.volume = Math.min(v, target);
+                currentLimit = Math.min(currentLimit + 2, targetLimit);
+                if (audio.volume < target || currentLimit < targetLimit) {
+                    requestAnimationFrame(step);
+                }
+            }
+            requestAnimationFrame(step);
+        };
+        if (audio.readyState >= 3) {
+            startFade();
+        } else {
+            audio.addEventListener('canplaythrough', startFade, { once: true });
         }
-        requestAnimationFrame(step);
     }
     function fadeOutAudio() {
         let v = audio.volume;
@@ -113,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fadeInAudio();
         showCards();
         dom.musicIcon.classList.remove('hidden');
+
         setTimeout(() => {
             dom.blackScreen.classList.add('hidden');
             dom.blackScreen.style.display = 'none';
