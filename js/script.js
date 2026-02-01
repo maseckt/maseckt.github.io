@@ -1,3 +1,5 @@
+// @license GPL-3.0-or-later
+
 document.addEventListener('DOMContentLoaded', () => {
     const dom = {
         body: document.body,
@@ -140,3 +142,5 @@ document.addEventListener('DOMContentLoaded', () => {
     resizeCanvas();
     animate();
 });
+
+// @license-end
