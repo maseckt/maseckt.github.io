@@ -1,7 +1,4 @@
-/*
-@license magnet:?xt=urn:btih:1f739d9348583b3c020e9444116460d01d1e7a07&dn=gpl-3.0.txt GPL-3.0-or-later
-*/
-
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-3.0
 document.addEventListener('DOMContentLoaded', () => {
     const dom = {
         body: document.body,
@@ -144,7 +141,4 @@ document.addEventListener('DOMContentLoaded', () => {
     resizeCanvas();
     animate();
 });
-
-/*
-@license-end
-*/
+// @license-end
