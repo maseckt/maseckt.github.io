@@ -1,4 +1,6 @@
-/* @license magnet:?xt=urn:btih:1f739d9348583b3c020e9444116460d01d1e7a07&dn=gpl-3.0.txt GPL-3.0-or-later */
+/*
+@license magnet:?xt=urn:btih:1f739d9348583b3c020e9444116460d01d1e7a07&dn=gpl-3.0.txt GPL-3.0-or-later
+*/
 
 document.addEventListener('DOMContentLoaded', () => {
     const dom = {
@@ -143,4 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
     animate();
 });
 
-/* @license-end */
+/*
+@license-end
+*/
