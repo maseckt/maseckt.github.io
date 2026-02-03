@@ -16,10 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
     const PARTICLE_COLOR = '#83a598';
-
     let particles = [];
     let targetLimit = getParticleLimit();
     let currentLimit = targetLimit;
+    let isPageVisible = true;
+    let animationId = null;
     function getParticleLimit() {
         return window.innerWidth < 768 ? 70 : 120;
     }
@@ -64,9 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.globalAlpha = 1;
     }
     function animate() {
+        if (!isPageVisible) return;
         updateParticles();
         drawParticles();
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
     }
     function ensureAudioLoaded() {
         if (audioReady) return;
@@ -119,6 +121,19 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => card.classList.add('visible'), i === 0 ? 0 : i * 100);
         });
     }
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            isPageVisible = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        } else {
+            isPageVisible = true;
+            resizeCanvas();
+            animate();
+        }
+    });
     dom.blackScreen.addEventListener('click', () => {
         dom.blackScreen.style.opacity = '0';
         fadeInAudio();
