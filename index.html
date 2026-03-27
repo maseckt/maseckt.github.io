@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="preload" href="fonts/ermilov-mini.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -49,12 +49,17 @@
             pointer-events: none;
             z-index: -1;
         }
+        #banner-wrapper {
+            position: fixed !important;
+            width: 100vw !important;
+        }
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding-top: 110px !important;
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
             gap: 14px;
-            padding: 60px 0 100px 0;
         }
         .card{
             background-color: var(--card);
@@ -191,6 +196,11 @@
 </head>
 <body>
     <div class="black-screen">Click to continue</div>
+
+    <div id="banner-wrapper">
+        <script src="https://keepandroidopen.org/banner.js?size=mini&hidebutton=off&id=banner-wrapper"></script>
+    </div>
+
     <div class="container">
         <div class="main card">
             <img src="img/avatar.webp" alt="Avatar" class="avatar" width="200" height="200">
